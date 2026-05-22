@@ -12,34 +12,32 @@
 .include "spice/NangateOpenCellLibrary.spi"         ; importa a biblioteca de células padrão da Nangate.
 
 * Fontes de alimentação e de estimulo das entradas
-VDD vdd 0 1.1
-VIN1 in1 0 pulse( 0 1.1 0 20p 20p 2n 4n )
-    ; IN1 (Source source input) é do tipo Pulse, e seus parâmtros são, na ordem:
-        ; v1: valor inicial - tensão antes do pulso começar (0V).
-        ; v2: valor de pulso - tensão do sinal no pico do pulso (1.1V).
-        ; td: tempo de atraso (time delay) - tempo que a fonte espera para começar a subir (0s).
-        ; tr: tempo de subida (time rise) - duração da transição v1->v2 (20p).
-        ; tf: tempo de descida (time fall) - duração da transição v2->v1 (20p).
-        ; pw: largura de pulso (pulse width) - O tempo que o sinal permanece no seu pico v2 (2n).
-        ; per: período - tempo total de um ciclo completo (4n).
+    VDD vdd 0 1.1
 
-VIN2 in2 0 pulse( 0 1.1 0 20p 20p 4n 8n )
-    ; Mudanças p/ melhor visualização do gráfico final. Daí fica melhor de ver as combinações lógicais mais facilmente (000, 010, 110, etc), conseguindo checar se o MUX tá funcionando como deveria.
-        ; pw: largura de pulso - comprimento nos picos 2x maior (4n) do que IN1.
-        ; per: período - ciclo total 2x maior (8n) que IN1.
+    VIN1 in1 0 dc 0
+        ; IN1 em nível lógico 0
 
-VSEL sel 0 pulse( 0 1.1 0 20p 20p 8n 16n )
-        ; pw: largura de pulso - comprimento nos picos 2x maior (8n) do que IN2.
-        ; per: período - ciclo total 2x maior (16n) do que IN2.
+    VIN2 in2 0 dc 1.1
+        ; IN2 em nível lógico 1
 
-;
+    VSEL sel 0 pulse( 0 1.1 0 20p 20p 10n 20n )
+            ; SEL (Chave seletora) é do tipo Pulse (alternado) oscliando a 50Mhz (Período de 20ns), e seus parâmetros são, na ordem:
+                ; v1: valor inicial - tensão antes do pulso começar (0V).
+                ; v2: valor de pulso - tensão do sinal no pico do pulso (1.1V).
+                ; td: tempo de atraso (time delay) - tempo que a fonte espera para começar a subir (0s).
+                ; tr: tempo de subida (time rise) - duração da transição v1->v2 (20p).
+                ; tf: tempo de descida (time fall) - duração da transição v2->v1 (20p).
+                ; pw: largura de pulso (pulse width) - O tempo que o sinal permanece no seu pico v2 (10n).
+                ; per: período - tempo total de um ciclo completo (20n).
+    
 
-* Fonte Dummy (medir corrente) => amperímetro
-Vdummy vdd amp dc 0
-    ; "Vdummy" (Voltage dummy) é o nome da fonte de tensão, seu tipo é dc (corrente contínua / direct current).
-					; vdd: nome do nó positivo (+) da fonte de tensão.
-					; a: nome do nó negativo (-) da fonte de tensão.
-					; 0: esse é o valor de tensão da fonte.
+    * Fonte Dummy (medir corrente) => amperímetro
+    Vdummy vdd amp dc 0
+        ; "Vdummy" (Voltage dummy) é o nome da fonte de tensão, seu tipo é dc (corrente contínua / direct current).
+                        ; vdd: nome do nó positivo (+) da fonte de tensão.
+                        ; a: nome do nó negativo (-) da fonte de tensão.
+                        ; 0: esse é o valor de tensão da fonte.
+    ;
 ;
 
 * Multiplexador 2:1 (feito com células de dimensão X1)
@@ -87,30 +85,38 @@ Vdummy vdd amp dc 0
             ; Nome: nome da célula na biblioteca (OR2_X1).
     ;
 
+    ; Capacitância de carga na saída:
+    c_load out 0 10f
+;
+
 
 * Bloco de controle da execução
 .control	; comandos de controle
 
     ; Comando Transiente (tran):
-        tran 10p 20n
-            ; tran: Esse comando define a análise do tempo.
-            ; passo: Passo de cálculo (10p) menor que o tempo de subida, que é 20p, para não perder os detalhes do sinal.
-            ; duração: Para conseguir enxergar o ciclo completo de todas as combinações lógicas, precisa de um tempo maior do que o período do sinal mais lento, que é de 16n. Daí 20n deve servir :D 
+    tran 10p 20n
+        ; tran: Esse comando define a análise do tempo.
+        ; passo: Passo de cálculo (10p) menor que o tempo de subida, que é 20p, para não perder os detalhes do sinal.
+        ; duração: Para conseguir enxergar o ciclo completo de todas as combinações lógicas, precisa de um tempo += 20n
     ;
 
     ; Comando de Execução (run):
-        run
+    run
     ;
 
     ; Comando de Plotagem (plot):
-        plot v(in1)+3.5 v(in2)+2.4 v(sel)+1.2 v(out)
-            ; plot: Esse comando está desenhando em um gráfico as 3 entradas (in1, in2 e sel) e a saída (out).
-            ; cada entrada está sendo somada à uma constante apenas para deslocar as ondas verticalmentem, facilitando a visualização de cada uma delas.
-        
-        plot i(Vdummy)
-            ; plot: Esse comando está desenhando em outro gráfico a corrente medida pelo amperímetro entre os pontos "vdd" e "amp".
+    ; plot v(in1)+3.5 v(in2)+2.4 v(sel)+1.2 v(out)
+        ; plot: Esse comando está desenhando em um gráfico as 3 entradas (in1, in2 e sel) e a saída (out).
+        ; cada entrada está sendo somada à uma constante apenas para deslocar as ondas verticalmentem, facilitando a visualização de cada uma delas.
+    
+    plot i(Vdummy)
+        ; plot: Esse comando está desenhando em outro gráfico a corrente medida pelo amperímetro entre os pontos "vdd" e "amp".
     ;
 
+    ; Comando para medir corrente média (meas):
+    meas tran I_media AVG i(Vdummy) from=0 to=20n
+    ;
+    
 .endc
 
 * Comando para finalizar a simulação
