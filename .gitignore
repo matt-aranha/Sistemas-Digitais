@@ -1,0 +1,21 @@
+# Bibliotecas e Modelos (Third-party)
+*.lib
+*.spi
+*.inc
+*.include
+
+# Ignorar as pastas de modelos do HSPICE inteiras (opcional, mas recomendado)
+hspice/
+
+# Arquivos de log e outputs de simulação do SPICE
+*.raw
+*.log
+*.out
+*.lis
+*.tr0
+*.sw0
+*.measure
+
+# Arquivos de sistema operacional (boa prática geral)
+.DS_Store
+Thumbs.db
