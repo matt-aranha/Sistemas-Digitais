@@ -90,14 +90,14 @@ Para esta análise, as entradas de dados foram fixadas (IN2=1, IN1=0) e o pino s
 ![Gráfico de Corrente MUX 1X](lab05/graficos/corrente_mux_x1.png)
 
 * **Análise Elétrica:** O gráfico ilustra o comportamento dinâmico típico da tecnologia CMOS 45nm. A corrente consumida em estado estacionário é praticamente nula. Nos momentos de transição do sinal `SEL` (chaveamento), ocorrem picos acentuados de corrente necessários para carregar e descarregar as capacitâncias parasitas internas e a carga de 10 fF na saída. 
-* **Potência Dissipada:** A partir da corrente média de ***1.77935 μA*** aferida pelo simulador, a potência dissipada pelo circuito dimensionado em 1X se mantém em níveis mínimos projetados para essa biblioteca padrão, atingindo o valor médio de ***1,96 μW.***
+* **Potência Dissipada:** A partir da corrente média de ***1,77935 μA*** aferida pelo simulador, a potência dissipada pelo circuito dimensionado em 1X se mantém em níveis mínimos projetados para essa biblioteca padrão, atingindo o valor médio de ***1,96 μW.***
 
 #### Cenário B: Células Lógicas de Dimensão 2X (`mux_x2.sp`)
 
 ![Gráfico de Corrente MUX 2X](lab05/graficos/corrente_mux_x2.png)
 
 * **Análise Elétrica Comparativa:** Ao substituir todas as portas lógicas por células de dimensão 2X, a largura dos transistores (drive strength) é dobrada. Consequentemente, observa-se que as amplitudes dos picos de corrente nos instantes de chaveamento são consideravelmente maiores em comparação ao circuito 1X.
-* **Impacto na Potência:** Embora o circuito 2X possua maior capacidade de condução de corrente (o que acelera as transições de sinal), as capacitâncias de porta (gate capacitance) dos transistores também são maiores. Isso resulta em um aumento direto na corrente média consumida para ***3.07881 μA*** e, portanto, **a potência total dissipada pelo circuito é significativamente maior** do que na versão 1X, sendo igual à ***3,39 μW.***
+* **Impacto na Potência:** Embora o circuito 2X possua maior capacidade de condução de corrente (o que acelera as transições de sinal), as capacitâncias de porta (gate capacitance) dos transistores também são maiores. Nesse sentido, há um aumento direto na corrente média consumida para ***3,07881 μA*** e, portanto, **a potência total dissipada pelo circuito é significativamente maior** do que na versão 1X, sendo igual à ***3,39 μW.***
 
 </details>
 
