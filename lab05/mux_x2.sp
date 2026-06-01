@@ -115,6 +115,7 @@
 
     ; Comando para medir corrente média (meas):
     meas tran I_media AVG i(Vdummy) from=0 to=20n
+        ; Resultado: 1.77935e-06 Amperes.
     ;
     
 .endc
