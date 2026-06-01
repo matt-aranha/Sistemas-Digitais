@@ -100,3 +100,15 @@ Para esta análise, as entradas de dados foram fixadas (IN2=1, IN1=0) e o pino s
 * **Impacto na Potência:** Embora o circuito 2X possua maior capacidade de condução de corrente (o que acelera as transições de sinal), as capacitâncias de porta (gate capacitance) dos transistores também são maiores. Isso resulta em um aumento direto na corrente média consumida e, portanto, **a potência total dissipada pelo circuito é significativamente maior** do que na versão 1X. *(Insira o valor calculado aqui, ex: Y.YY uW)*.
 
 </details>
+
+
+<details>
+<summary><h2>Laboratório 06:</h2></summary>
+   Em andamento
+</details>
+
+
+<details>
+<summary><h2>Laboratório 07:</h2></summary>
+   Em andamento
+</details>
